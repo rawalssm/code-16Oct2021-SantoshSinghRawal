@@ -170,11 +170,17 @@ try{
     }, 3000); // then block
     //Update Member in DB
    // updateMemberBMI(memberdata);
+
+   res.status(200).json({
+    error:false, 
+    message:'server is up and running from routes data saved to database'
+  });
+
 } catch (err)
     {
         console.log("Erro in catch block");
         res.status(500).json({
-            error:false, 
+            error:true, 
             message:'server is not up and running from routes',
             data:null      
         });
