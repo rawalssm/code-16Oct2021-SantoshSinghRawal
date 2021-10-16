@@ -36,7 +36,7 @@ exports.getHealthMetaData = async (req, res) =>
  
 }
 
-getHealthMetaData2 = async ( data ) =>
+getHealthMetaData2 = async () =>
 {
     HealthMetadata.findAll()
         .then(data => {
@@ -71,8 +71,8 @@ exports.calculateBMI = async (req, res) =>
     console.log("Initiliting "+ BMICats.length);
     
 try{
-
-    getHealthMetaData2(data);
+    console.log("Starting try block " );
+   data = getHealthMetaData2();
       Object.keys(data).forEach(function(key) {
         var hdata = result[key];
         var myjsonString =  "{ \"BMIId\" :" + hdata.BMIId +  ", \"BMI_Max\" : " + hdata.BMI_Max  +  " ,\"BMI_Min\" : " + hdata.BMI_Min  + "}"

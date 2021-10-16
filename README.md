@@ -31,7 +31,7 @@ Pakcage.json
 ============================================
 Mysql DB Objects
 
-Two Objects created in DB to persiste the data for further reporting
+Two Objects created in DB to persists the data for further reporting
 
 BMIHealthRisk --- Meta data for the BMI formula and Risk categorization
 MemberBMI-- Member Health and Risk data
