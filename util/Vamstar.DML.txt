@@ -1,0 +1,42 @@
+[{"Gender": "Male", "HeightCm": 171, "WeightKg": 96 }, { "Gender": "Male", "HeightCm": 161, "WeightKg":
+85 }, { "Gender": "Male", "HeightCm": 180, "WeightKg": 77 }, { "Gender": "Female", "HeightCm": 166,
+"WeightKg": 62}, {"Gender": "Female", "HeightCm": 150, "WeightKg": 70}, {"Gender": "Female", 
+"HeightCm": 167, "WeightKg": 82} ]
+
+Table1  -- Curtomer/Member data
+
+CustId
+Gender
+HeightCm
+WeightKg
+BMIId 
+
+Table2 -- health metadata
+BMI-Category-HRisk data - BMIHealthRisk 
+1 - 18.4 and below - Underweight -    Malnutrition risk
+2 - 18.5 - 24.9  - Normal weight - Low risk
+3 - 25 - 29.9 - Overweight - Enhanced risk
+4 - 30 - 34.9 - Moderately obese - Medium risk
+5 - 35 - 39.9 - Severely obese - High risk
+6 - 40 and above -  Very severely obese  - Very High risk
+
+Table3 - Cutomer healthdata
+CustId - Table1.Id
+BMICatRiskId 
+
+
+create table BMIHealthRisk ( BMIId INT PRIMARY KEY AUTO_INCREMENT, BMI FLOAT , BMICategory VARCHAR(100) , HealthRisk Varchar(100));
+Query OK, 0 rows affected (0.19 sec)
+
+to store member data
+create table MemberBMI ( MemberId INT PRIMARY KEY AUTO_INCREMENT,Gender Varchar(100) , HeightCm  Float , WeightKg Float , BMICategoryId INT ,datainserted datetime);
+
+
+insert into BMIHealthRisks (BMI_MAX , BMI_MIN, BMICategory , HealthRisk,createdAt,updatedAt) values(18.4 ,null, 'Underweight' ,'Malnutrition risk' ,curdate() ,  curdate());
+insert into BMIHealthRisks (BMI_MAX ,  BMI_MIN,BMICategory , HealthRisk,createdAt,updatedAt) values( 24.9 , 18.4,'Normal weight' ,'Low risk'  ,curdate() ,  curdate());
+insert into BMIHealthRisks (BMI_MAX ,BMI_MIN, BMICategory , HealthRisk,createdAt,updatedAt) values(29.9 , 24.9, 'Overweight' ,'Enhanced  risk'  ,curdate() ,  curdate());
+insert into BMIHealthRisks (BMI_MAX ,BMI_MIN, BMICategory , HealthRisk,createdAt,updatedAt) values(34.9 ,29.9, 'Moderately obese' ,'Medium risk' ,curdate() ,  curdate() );
+insert into BMIHealthRisks (BMI_MAX ,BMI_MIN, BMICategory , HealthRisk,createdAt,updatedAt) values(39.9 , 34.9,'Severely obese' ,'High risk'  ,curdate() ,  curdate());
+insert into BMIHealthRisks (BMI_MAX , BMI_MIN,BMICategory , HealthRisk,createdAt,updatedAt) values(40 ,null, 'Very Severely obese' ,'Very High risk'  ,curdate() ,  curdate());
+
+
