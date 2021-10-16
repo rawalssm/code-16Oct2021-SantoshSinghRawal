@@ -1,6 +1,7 @@
 # code-16Oct2021-SantoshSinghRawal for assessment
 
 Project structure
+=====================================
 
 API
 	Routes
@@ -24,12 +25,18 @@ Pakcage.json
 		mysql
 		dotenv
 		nodemon
+		sequelize
+		mysql2
 
 ============================================
 Mysql DB Objects
 
-Three Objects created in DB to persiste the data for further reporting
+Two Objects created in DB to persiste the data for further reporting
 
 BMIHealthRisk --- Meta data for the BMI formula and Risk categorization
-customer  -- Member Health data
-CustomerBMIHealthRisk -- Member's Health and Risk data
+MemberBMI-- Member Health and Risk data
+
+============================================
+Routes
+
+Two routes exposed /members and /GenerateBMI in restAPI to get and update the data in DB
