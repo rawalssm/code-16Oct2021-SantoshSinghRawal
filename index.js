@@ -1,14 +1,16 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const logger = require('./middleware/initlogger');
+//const db = require("./config/db");
 
 // globas variables
 const app = express();
 dotenv.config({path:'./config/config.env'});
 const PORT = process.env.PORT || 8001;
 
-console.log (`  ${process.env.MSDB_HOST} , ${process.env.MSDB_USER} , ${process.env.MSDB_PASSWD} , ${process.env.MSDB_DB}`)
+console.log (`  ${process.env.MSDB_HOST} , ${process.env.MSDB_USER} ,  ${process.env.MSDB_DB}`)
 
+//db.sequelize.sync();
 
 // user middleware
 app.use(express.json());
