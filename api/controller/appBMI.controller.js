@@ -72,15 +72,13 @@ exports.calculateBMI = async (req, res) =>
     
 try{
     console.log("Starting try block " );
-   data = getHealthMetaData2();
-      Object.keys(data).forEach(function(key) {
-        var hdata = result[key];
-        var myjsonString =  "{ \"BMIId\" :" + hdata.BMIId +  ", \"BMI_Max\" : " + hdata.BMI_Max  +  " ,\"BMI_Min\" : " + hdata.BMI_Min  + "}"
-        var myjsonObj = JSON.parse(myjsonString);
-            BMICats.push( myjsonObj );
-        });
-    now = Date();
-    console.log("Post populatoin " + BMICats.length + '- '+ now);
+     const data = await HealthMetadata.findAll( { attributes : ['BMI_Max' , 'BMI_Min' , 'id' ]} );
+     console.log("All HealthMetadata:", + data.length + JSON.stringify(data, null, 2));
+    //  data.forEach(element => {
+    //     BMICats.push( element );
+    //  });
+    // now = Date();
+    // console.log("Post populatoin " + data.length + '- '+ JSON.stringify(BMICats, null, 2));
 
     // get query data
     height = req.query.HeightCm;
@@ -92,27 +90,27 @@ try{
     now = Date();
     calculatedBMI = WeightKg/(height/100);
     // get the BMI category and HRisk
-    for (let i = 0; i < BMICats.length; i++)
+    for (let i = 0; i < data.length ; i++)
     {
-        //if ( BMICat.BMI_MIN === 'undefined'  )
-        console.log(BMICats[i]["BMI_Min"] );
-        if (!( BMICats[i]["BMI_Min"] )  )
+        
+       console.log(data[i]["BMI_Min"] );
+        if (!( data[i]["BMI_Min"] )  )
         {
-            if (calculatedBMI <= BMICats[i]["BMI_Max"] )
-            calculatedBMICategoryId=BMICats[i]["BMIId"];
+            if (calculatedBMI <= data[i]["BMI_Max"] )
+            calculatedBMICategoryId=data[i]["id"];
             
         }
-        else if ( !( BMICats[i]["BMI_Max"] ) )
+        else if ( !( data[i]["BMI_Max"] ) )
         {
-            if (calculatedBMI > BMICats[i]["BMI_Min"] )
+            if (calculatedBMI > data[i]["BMI_Min"] )
             {
-                calculatedBMICategoryId=BMICats[i]["BMIId"];
+                calculatedBMICategoryId=data[i]["id"];
             }
         }
         else
         {
-            if ( calculatedBMI > BMICats[i]["BMI_Min"] && calculatedBMI <= BMICats[i]["BMI_Max"] )
-                calculatedBMICategoryId=BMICats[i]["BMIId"];
+            if ( calculatedBMI > data[i]["BMI_Min"] && calculatedBMI <= data[i]["BMI_Max"] )
+                calculatedBMICategoryId=data[i]["id"];
                 
         }
     } // for block BMICats
