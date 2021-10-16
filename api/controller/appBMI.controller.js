@@ -1,143 +1,96 @@
 // get data from DB my sql
-const db = require('../../config/db');
-const memberdata = require('../../models/Member.js');
-const BMICategory = require('../../models/HealthMetadata.js');
+const ormtool = require('../../config/db');
 var mysql = require('mysql');
+const MemberBMI = ormtool.db.MemberBMI;
+const HealthMetadata = ormtool.db.HealthMetadata;
 //var BMICategoryes = [];
 
 //  endpoints to get user information
-exports.getMember = async (req, res) => 
+exports.getMembers = async (req, res) => 
 {
-    // if connection is successful
-    db.dbconn.query("SELECT * from customer", function (err, result, fields) 
-    {
-      // if any error while executing above query, throw error
-      if (err) throw err;
-      // if there is no error, you have the result
-      // iterate for all the rows in result
-      console.log("reached here to get member data ")
-      Object.keys(result).forEach(function(key) {
-        var row = result[key];
-        console.log(row.name);
+    MemberBMI.findAll()
+        .then(data => {
+                res.send(data);
+            })
+      .catch(err => {
+                res.status(500).send({
+                message:
+                err.message || "Some error occurred while retrieving MemberBMI."
+                });
+      });
+};
 
-        res.status(200).json({
-            error:false, 
-            message:'server is up and running from routes',
-            data:row      
-        });
 
-    });
-    });
-
-    
-}
-
-async function  getHealthMetaData  ( BMICategoryes )
+exports.getHealthMetaData = async (req, res) =>
 {
-  
-    // if connection is successful
-    db.dbconn.query("SELECT * from BMIHealthRisk", function (err, result, fields) 
-    {
-      // if any error while executing above query, throw error
-      if (err) throw err;
-      // iterate for all the rows in result
-      Object.keys(result).forEach(function(key) {
-        var hdata = result[key];
-       // console.log(BMICategory);
-       var myJsonObj =  "' \"BMIId\" :" + hdata.BMIId +  " \"BMI_Max\" : " + hdata.BMI_Max  +  " \"BMI_Min\" : " + hdata.BMI_Min  + "'"
-       BMICategoryes.push( myJsonObj );
-       console.log("insided the function "+ myJsonObj );
-       
-    });
-    });
+    HealthMetadata.findAll()
+        .then(data => {
+                res.send(data);
+            })
+      .catch(err => {
+                res.status(500).send({
+                message:
+                err.message || "Some error occurred while retrieving MemberBMI."
+                });
+      });
  
 }
 
-exports.updateMemberBMI = async (rows) => 
+getHealthMetaData2 = async ( data ) =>
 {
-    // if connection is successful
-    db.dbconn.query("Insert into MemberBMI (MemberId,BMICatgoryHRiskId,startdate) values ?",[rows], function (err, result, fields) 
-    {
-    // if any error while executing above query, throw error
-    if (err) throw err;
-    // if there is no error, you have the result
-    console.log(result);
-    });
+    HealthMetadata.findAll()
+        .then(data => {
+                return data ;
+            })
+      .catch(err => {
+                return ( "Some error occurred while retrieving MemberBMI." );
+      });
+ 
+}
 
+createMemberBMI = async (member) => 
+{
+    MemberBMI.create(member)
+        .then(data => {
+        console.log(data);
+        })
+    .catch(err => {
+        console.log("Error - while inserting the data");
+    });
 } 
 
 exports.calculateBMI = async (req, res) => 
 {
     var  now = new Date();
-    //  data setup
-    var JsonMember = { "Gender": "Male", "HeightCm": 171, "WeightKg": 96 };
-    var JsonMember2 = { "Gender": "Male", "HeightCm": 171, "WeightKg": 96 };
-    var JsonMember3 ={ "Gender": "Male", "HeightCm": 161, "WeightKg":85 };
-    var JsonMember4 ={ "Gender": "Male", "HeightCm": 180, "WeightKg": 77 };
-    var JsonMember5 ={ "Gender": "Female","HeightCm": 166,"WeightKg": 62};
-    var JsonMember6 ={ "Gender": "Female","HeightCm": 150, "WeightKg": 70};
-    var JsonMember7 ={ "Gender": "Female","HeightCm": 167, "WeightKg": 82};
-    
-    var memberdata = [];
-        
-    memberdata.push(JsonMember);
-    memberdata.push(JsonMember2);
-    memberdata.push(JsonMember3);
-    memberdata.push(JsonMember4);
-    memberdata.push(JsonMember5);
-    memberdata.push(JsonMember6);
-    memberdata.push(JsonMember7);
-    console.log("member pushed");
-    var height;
-    var WeightKg;
-    var myObj , calculatedBMI,calculatedBMICategoryId;
-
+    console.log("starting ......... ");
+    var height =0 ;
+    var WeightKg=0;
+    var Gender ="None";
+    var myObj , calculatedBMI , calculatedBMICategoryId;
     var BMICats = [];   
     console.log("Initiliting "+ BMICats.length);
     
-    
-      //// promise block
-
 try{
-    
-   
-    db.dbconn.query("SELECT * from BMIHealthRisk", function (err, result, fields) 
-        {
-      // if any error while executing above query, throw error
-      if (err) throw err;
-      // iterate for all the rows in result
-      Object.keys(result).forEach(function(key) {
+
+    getHealthMetaData2(data);
+      Object.keys(data).forEach(function(key) {
         var hdata = result[key];
-       // console.log(BMICategory);
-       var myjsonString =  "{ \"BMIId\" :" + hdata.BMIId +  ", \"BMI_Max\" : " + hdata.BMI_Max  +  " ,\"BMI_Min\" : " + hdata.BMI_Min  + "}"
-       var myjsonObj = JSON.parse(myjsonString);
-       BMICats.push( myjsonObj );
-       console.log("Inline "+ myjsonObj );
-       
-    });
+        var myjsonString =  "{ \"BMIId\" :" + hdata.BMIId +  ", \"BMI_Max\" : " + hdata.BMI_Max  +  " ,\"BMI_Min\" : " + hdata.BMI_Min  + "}"
+        var myjsonObj = JSON.parse(myjsonString);
+            BMICats.push( myjsonObj );
+        });
     now = Date();
     console.log("Post populatoin " + BMICats.length + '- '+ now);
-    });
 
+    // get query data
+    height = req.query.HeightCm;
+    WeightKg = req.query.WeightKg;
+    Gender = req.query.Gender;
+
+// wait for DB response
     setTimeout( function () {
-    //.then( () => { 
-       console.log("Post block "+BMICats.length);
-
-    for (let i = 0; i < memberdata.length; i++)
-    {
-        console.log(memberdata[i]);
-        height = memberdata[i]["HeightCm"];
-        WeightKg = memberdata[i]["WeightKg"];
-        now = Date();
-    console.log("finished the for block - "+ i + '- '+ now );
+    now = Date();
     calculatedBMI = WeightKg/(height/100);
-     
-    //member.BMI = calculatedBMI;
-    
-    //get metadata
-    //getHealthMetaData(BMICategoryes);
-    //console.log("fetched data "+ BMICategoryes);
-
     // get the BMI category and HRisk
     for (let i = 0; i < BMICats.length; i++)
     {
@@ -162,27 +115,33 @@ try{
                 calculatedBMICategoryId=BMICats[i]["BMIId"];
                 
         }
-    } // for block
+    } // for block BMICats
 
-    console.log(memberdata[i]["Gender"] + ' - '+ height + ' - '+ WeightKg + ' - '+ calculatedBMI + ' - '+ calculatedBMICategoryId );
-    console.log(BMICats.length);
-    } // FOR BLOCK
-    }, 3000); // then block
-    //Update Member in DB
-   // updateMemberBMI(memberdata);
-
-   res.status(200).json({
-    error:false, 
-    message:'server is up and running from routes data saved to database'
-  });
-
-} catch (err)
+    var memberbmi =  
     {
-        console.log("Erro in catch block");
+        Gender: Gender,
+        HeightCm : height ,
+        WeightKg :WeightKg ,
+        BMICategoryId :calculatedBMICategoryId
+    }
+
+    //Update Member in DB
+    createMemberBMI(memberbmi);
+
+    console.log(Gender + ' - '+ height + ' - '+ WeightKg + ' - '+ calculatedBMI + ' - '+ calculatedBMICategoryId );
+    res.status(200).json({
+        error:false, 
+        data: Gender + ' - '+ height + ' - '+ WeightKg + ' - '+ calculatedBMI + ' - '+ calculatedBMICategoryId
+    });
+    }, 1000 ); // timeout for 1 seconds
+
+}catch (err)
+        {
+        console.log("Error in catch block");
         res.status(500).json({
             error:true, 
             message:'server is not up and running from routes',
-            data:null      
+            data:Gender + ' - '+ height + ' - '+ WeightKg + ' - '+ calculatedBMI + ' - '+ calculatedBMICategoryId 
         });
     }
 }

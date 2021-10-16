@@ -2,18 +2,21 @@
 const express = require('express');
 const router = express.Router();
 
-const { getMember,
-    getHealthMetaData ,calculateBMI
+const { getMembers,
+    getHealthMetaData , calculateBMI
 } = require('../controller/appBMI.controller');
 
-router.route('/member')
-.get(getMember);
+router.route('/members')
+.get(getMembers);
 //.post()
 //.put(updateMemberBMI);
 //.delete();
 
 router.route('/GenerateBMI')
-.get(calculateBMI);
+.post(calculateBMI);
+
+router.route('/hcrange')
+.get(getHealthMetaData);
 
 
 //router.route('/Healthdata')
